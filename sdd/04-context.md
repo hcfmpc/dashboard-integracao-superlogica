@@ -4,7 +4,7 @@
 
 ## Estado Atual
 
-**Fase 6.4 concluída.** Cobertura Vitest: 99.18% statements, 97.97% branches, 93.1% functions, 100% lines. 39 testes passando em 7 arquivos de spec. Build OK.
+**Fase 6.5 concluída. Todas as fases completas.** Build de produção OK: 437 kB initial (gzip ~107 kB). Cobertura Vitest: 99.18% statements, 93.1% functions, 100% lines. 39 testes passando. Sem localhost hardcoded em src/.
 
 ## Premissas Confirmadas
 
@@ -58,7 +58,7 @@
 | DashboardTable + StatusBadge com signals/computed | ✅ Fase 6.2 — 2026-05-03 |
 | HistoricoPanel + ErrorBanner | ✅ Fase 6.3 — 2026-05-03 |
 | Cobertura Vitest ≥ 80% | ✅ Fase 6.4 — 2026-05-03 (99.18% stmts, 93.1% funcs, 100% lines) |
-| Build de produção + documentação de deploy | ⬜ Fase 6.5 |
+| Build de produção + documentação de deploy | ✅ Fase 6.5 — 2026-05-03 |
 
 ## Fragmentos Críticos Implementados
 
@@ -81,6 +81,50 @@ beforeEach(() => {
 ```bash
 ./node_modules/.bin/ng serve --proxy-config proxy.conf.json  # dev server :4200
 ./node_modules/.bin/ng test --watch=false                    # testes Vitest
+./node_modules/.bin/ng test --watch=false --coverage --coverage-reporters=text  # cobertura
 ./node_modules/.bin/ng build --configuration development     # build dev
 ./node_modules/.bin/ng build --configuration production      # build prod
 ```
+
+## Procedimento de Deploy (Fase 6.5)
+
+### Pré-requisitos
+- `environment.prod.ts` com `apiBase: 'http://servidor:5000'` apontando para a API .NET em produção
+- CORS habilitado na API .NET para aceitar a origem do dashboard
+
+### Build
+```bash
+./node_modules/.bin/ng build --configuration production
+```
+O artefato é gerado em `dist/dashboard-integracao-superlogica/browser/`.
+
+### Servir com Nginx
+```nginx
+server {
+    listen 80;
+    root /var/www/dashboard/browser;
+    index index.html;
+    location / { try_files $uri $uri/ /index.html; }
+}
+```
+
+### Servir com IIS
+Copiar `dist/dashboard-integracao-superlogica/browser/` para o diretório raiz do site. Adicionar `web.config` com URL Rewrite para SPA:
+```xml
+<rewrite>
+  <rules>
+    <rule name="Angular Routes" stopProcessing="true">
+      <match url=".*" />
+      <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+      </conditions>
+      <action type="Rewrite" url="/" />
+    </rule>
+  </rules>
+</rewrite>
+```
+
+### Validações pós-deploy
+- [ ] `GET /api/status` acessível a partir do domínio de produção (CORS OK)
+- [ ] Polling de 15 s funciona sem erros de CORS no console
+- [ ] Banner de erro aparece ao desligar a API e some ao religar
