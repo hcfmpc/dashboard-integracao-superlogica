@@ -4,7 +4,7 @@
 
 ## Estado Atual
 
-**Fase 6.2 concluída.** StatusBadgeComponent, DashboardTableComponent e AppComponent integrados. 28 testes Vitest passando. Build de desenvolvimento OK.
+**Fase 6.3 concluída.** HistoricoPanelComponent, ErrorBannerComponent e NextRunChipComponent implementados e integrados no AppComponent. 36 testes Vitest passando. Build de desenvolvimento OK.
 
 ## Premissas Confirmadas
 
@@ -56,7 +56,7 @@
 | SDD dashboard concluído | ✅ |
 | Setup Angular v21 + PollingService com signal | ✅ Fase 6.1 — 2026-05-03 |
 | DashboardTable + StatusBadge com signals/computed | ✅ Fase 6.2 — 2026-05-03 |
-| HistoricoPanel + ErrorBanner | ⬜ Fase 6.3 |
+| HistoricoPanel + ErrorBanner | ✅ Fase 6.3 — 2026-05-03 |
 | Cobertura Vitest ≥ 80% | ⬜ Fase 6.4 |
 | Build de produção + documentação de deploy | ⬜ Fase 6.5 |
 
