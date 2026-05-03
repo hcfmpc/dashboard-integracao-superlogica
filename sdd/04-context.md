@@ -4,7 +4,7 @@
 
 ## Estado Atual
 
-**Fase 6.1 concluída.** Angular v21 inicializado, Angular Material instalado, serviços de polling implementados e testados. 14 testes Vitest passando. Build de desenvolvimento OK.
+**Fase 6.2 concluída.** StatusBadgeComponent, DashboardTableComponent e AppComponent integrados. 28 testes Vitest passando. Build de desenvolvimento OK.
 
 ## Premissas Confirmadas
 
@@ -31,6 +31,7 @@
 | Angular Material (tema `azure-blue`) para UI | Componentes acessíveis e consistentes sem escrever CSS de tabela do zero. `indigo-pink` foi descontinuado no M3. |
 | `TestBed.flushEffects()` em testes de services | `effect()` não dispara automaticamente no ambiente Vitest; é necessário chamar explicitamente antes de resolver os mocks HTTP |
 | `provideAnimationsAsync()` no `app.config.ts` | Requerido pelo Angular Material v21; `@angular/animations` instalado separadamente pois não era dependência gerada pelo `ng new` |
+| CSS classes em vez de inline styles no `StatusBadgeComponent` | jsdom normaliza hex para `rgb()`, quebrando testes de cor; classes CSS são testáveis via `classList.contains()` |
 
 ## Dependências de Outros Times/Projetos
 
@@ -54,7 +55,7 @@
 |---|---|
 | SDD dashboard concluído | ✅ |
 | Setup Angular v21 + PollingService com signal | ✅ Fase 6.1 — 2026-05-03 |
-| DashboardTable + StatusBadge com signals/computed | ⬜ Fase 6.2 |
+| DashboardTable + StatusBadge com signals/computed | ✅ Fase 6.2 — 2026-05-03 |
 | HistoricoPanel + ErrorBanner | ⬜ Fase 6.3 |
 | Cobertura Vitest ≥ 80% | ⬜ Fase 6.4 |
 | Build de produção + documentação de deploy | ⬜ Fase 6.5 |
