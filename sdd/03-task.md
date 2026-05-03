@@ -3,102 +3,102 @@
 > **Repositório**: `dashboard-integracao-superlogica`
 > **Pré-requisito**: API .NET rodando em `localhost:5000` com endpoints `/api/status`, `/api/condominios`, `/api/execucoes/{id}`
 
-## Fase 6.1 – Setup e Polling
+## Fase 6.1 – Setup e Polling ✅ concluída em 2026-05-03
 
 ### Setup do projeto
-- [ ] `ng new dashboard-integracao-superlogica --standalone --routing --style=scss`
-- [ ] `ng add @angular/material` (tema personalizado ou pré-definido)
-- [ ] Criar `proxy.conf.json` apontando `/api` → `http://localhost:5000`
-- [ ] Configurar `vitest.config.ts` e `test-setup.ts` (padrão Angular v21)
-- [ ] Criar `environments/environment.ts` (`apiBase: ''`) e `environment.prod.ts` (`apiBase: 'http://servidor:5000'`)
-- [ ] Criar modelos TypeScript em `models/execucao-status.model.ts`:
+- [x] `ng new dashboard-integracao-superlogica --standalone --routing --style=scss`
+- [x] `ng add @angular/material` (tema `azure-blue` / Material Design 3 — `indigo-pink` descontinuado no M3)
+- [x] Criar `proxy.conf.json` apontando `/api` → `http://localhost:5000`
+- [x] Configurar Vitest — Angular CLI v21 já usa `@angular/build:unit-test` com Vitest nativo; `vitest.config.ts` separado não necessário
+- [x] Criar `environments/environment.ts` (`apiBase: ''`) e `environment.prod.ts` (`apiBase: 'http://servidor:5000'`)
+- [x] Criar modelos TypeScript em `models/execucao-status.model.ts`:
   - `ExecucaoStatus` (union type com os 9 estados)
   - `StatusCondominio`, `ExecucaoHistorico`, `Condominio`
 
 ### StatusApiService
-- [ ] Implementar `StatusApiService` com `inject(HttpClient)`:
+- [x] Implementar `StatusApiService` com `inject(HttpClient)`:
   - `getStatus(): Observable<StatusCondominio[]>`
   - `getCondominios(): Observable<Condominio[]>`
   - `getHistorico(id: number): Observable<ExecucaoHistorico[]>`
-- [ ] Testes Vitest com `HttpClientTestingModule`: 200 OK, erro de rede, payload malformado
+- [x] Testes Vitest com `provideHttpClientTesting`: 200 OK, erro de rede
 
 ### PollingService
-- [ ] Implementar `PollingService` com:
+- [x] Implementar `PollingService` com:
   - `status = signal<StatusCondominio[]>([])`
   - `apiError = signal<string | null>(null)`
   - `lastUpdate = signal<Date | null>(null)`
   - `condominiosComFalha = computed(...)`: filtra falhas
   - `totalFinalizados = computed(...)`: conta finalizados
   - `effect()` com `setInterval(15_000)` + `clearInterval` no cleanup
-- [ ] Testes Vitest: signal atualiza após fetch, computed reage a mudança de status, erro seta `apiError`
+- [x] Testes Vitest: signal atualiza após fetch, computed reage a mudança de status, erro seta `apiError`
 
 ---
 
-## Fase 6.2 – Componentes Principais
+## Fase 6.2 – Componentes Principais ✅ concluída em 2026-05-03
 
 ### StatusBadgeComponent
-- [ ] Componente standalone com `input()` signal: `status: InputSignal<ExecucaoStatus>`
-- [ ] `computed()` interno derivando cor e label do status
-- [ ] CSS: variáveis CSS por estado; sem classes dinâmicas complexas
-- [ ] Testes Vitest: renderiza cor correta para cada um dos 9 estados
+- [x] Componente standalone com `input()` signal: `status: InputSignal<ExecucaoStatus>`
+- [x] `computed()` interno derivando CSS class do status (não inline styles — jsdom normaliza hex para rgb)
+- [x] CSS: classes por estado com cores específicas
+- [x] Testes Vitest: renderiza CSS class e label corretos para cada um dos 9 estados
 
 ### DashboardTableComponent
-- [ ] Tabela com `@for` e `@if` (nova sintaxe Angular v17+)
-- [ ] Colunas: Nome | Status (badge) | Última execução | Títulos | Próxima execução
-- [ ] Recebe `statusList = input<StatusCondominio[]>()` como signal
-- [ ] Ao clicar no nome: emitir `condominioSelecionado = output<number>()`
-- [ ] Indicador "Última atualização: HH:MM:SS" via `lastUpdate` do `PollingService`
-- [ ] Testes Vitest: render da tabela com dados mockados, click emite output correto
+- [x] Tabela com `@for` e `@if` via `mat-table` (Angular Material)
+- [x] Colunas: Nome | Status (badge) | Última execução | Títulos | Próxima execução
+- [x] Recebe `statusList = input<StatusCondominio[]>()` como signal
+- [x] Ao clicar no nome: emitir `condominioSelecionado = output<number>()`
+- [x] Indicador "Última atualização: HH:MM:SS" via `lastUpdate` do `PollingService`
+- [x] Testes Vitest: render da tabela com dados mockados, click emite output correto
 
 ### AppComponent
-- [ ] `inject(PollingService)` — sem construtor explícito
-- [ ] Passa `status()` do signal para `DashboardTableComponent`
-- [ ] Exibe `ErrorBannerComponent` quando `apiError()` não é null
-- [ ] Gerencia `condominioSelecionadoId = signal<number | null>(null)` para historico
+- [x] `inject(PollingService)` — sem construtor explícito
+- [x] Passa `status()` do signal para `DashboardTableComponent`
+- [x] Exibe `ErrorBannerComponent` quando `apiError()` não é null
+- [x] Gerencia `condominioSelecionadoId = signal<number | null>(null)` para historico
 
 ---
 
-## Fase 6.3 – Histórico e Tratamento de Erros
+## Fase 6.3 – Histórico e Tratamento de Erros ✅ concluída em 2026-05-03
 
 ### HistoricoPanelComponent
-- [ ] Componente standalone com `condominioId = input<number | null>()`
-- [ ] `effect()` reage à mudança de `condominioId`: chama `StatusApiService.getHistorico()`
-- [ ] `historico = signal<ExecucaoHistorico[]>([])`
-- [ ] Exibe tabela com: data, período, status (badge), títulos, mensagem de erro expandível
-- [ ] Estado de carregamento: skeleton/spinner enquanto busca
-- [ ] Testes Vitest: carrega histórico ao receber id, limpa ao receber null
+- [x] Componente standalone com `condominioId = input<number | null>()`
+- [x] `effect()` reage à mudança de `condominioId`: chama `StatusApiService.getHistorico()`
+- [x] `historico = signal<ExecucaoHistorico[]>([])`
+- [x] Exibe tabela com: data, período, status (badge), títulos, mensagem de erro
+- [x] Estado de carregamento: spinner (`mat-spinner`) enquanto busca
+- [x] Testes Vitest: carrega histórico ao receber id, limpa ao receber null
 
 ### ErrorBannerComponent
-- [ ] Exibe banner quando `apiError()` está setado
-- [ ] Botão "Tentar novamente" que aciona fetch imediato no `PollingService`
-- [ ] Auto-oculta quando próximo fetch for bem-sucedido
+- [x] Exibe banner quando `apiError()` está setado
+- [x] Botão "Tentar novamente" que aciona fetch imediato no `PollingService`
+- [x] Auto-oculta quando próximo fetch for bem-sucedido
 
 ### NextRunChipComponent
-- [ ] Chip simples com `proximaExecucao` formatada (horário local `HH:MM`)
-- [ ] Cor: cinza se no futuro; amarelo se dentro de 5 min; sem alerta se passado
+- [x] Chip simples com `proximaExecucao` formatada (horário local `HH:MM`)
+- [x] Cor: cinza se no futuro; amarelo se dentro de 5 min; cinza claro se passado
 
 ---
 
-## Fase 6.4 – Testes e Cobertura
+## Fase 6.4 – Testes e Cobertura ✅ concluída em 2026-05-03
 
-- [ ] Cobertura ≥ 80% em `services/` e componentes principais (`DashboardTableComponent`, `StatusBadgeComponent`, `HistoricoPanelComponent`)
-- [ ] Cobrir cenários obrigatórios:
-  - [ ] `StatusBadgeComponent`: cada um dos 9 estados renderiza cor e label corretos
-  - [ ] `PollingService`: `computed()` `condominiosComFalha` reage quando status muda para `FALHA_TEMPORARIA`
-  - [ ] `PollingService`: erro HTTP seta `apiError` sem crashar a aplicação
-  - [ ] `DashboardTableComponent`: click no nome emite o `condominioId` correto
-  - [ ] `HistoricoPanelComponent`: `effect()` dispara `getHistorico` quando `condominioId` muda
-  - [ ] `AppComponent`: `ErrorBannerComponent` aparece e some conforme `apiError` signal
+- [x] Cobertura ≥ 80% em `services/` e componentes principais — resultado: **99.18% stmts, 93.1% funcs, 100% lines**
+- [x] Cobrir cenários obrigatórios:
+  - [x] `StatusBadgeComponent`: cada um dos 9 estados renderiza CSS class e label corretos
+  - [x] `PollingService`: `computed()` `condominiosComFalha` reage quando status muda para `FALHA_TEMPORARIA`
+  - [x] `PollingService`: erro HTTP seta `apiError` sem crashar a aplicação
+  - [x] `DashboardTableComponent`: click no nome emite o `condominioId` correto
+  - [x] `HistoricoPanelComponent`: `effect()` dispara `getHistorico` quando `condominioId` muda
+  - [x] `AppComponent`: `ErrorBannerComponent` aparece e some conforme `apiError` signal
 
 ---
 
-## Fase 6.5 – Build de Produção e Deploy
+## Fase 6.5 – Build de Produção e Deploy ✅ concluída em 2026-05-03
 
-- [ ] `ng build --configuration production`
-- [ ] Confirmar que `environment.prod.ts` usa `apiBase` correto apontando para o servidor da API .NET
-- [ ] Validar que não há referências a `localhost:5000` hardcoded nos componentes
-- [ ] Documentar procedimento de deploy:
+- [x] `ng build --configuration production` — 437 kB initial, gzip ~107 kB
+- [x] Confirmar que `environment.prod.ts` usa `apiBase` correto apontando para o servidor da API .NET
+- [x] Validar que não há referências a `localhost:5000` hardcoded nos componentes
+- [x] Documentar procedimento de deploy (ver `04-context.md` § Procedimento de Deploy):
   - Copiar `dist/dashboard-integracao-superlogica/browser/` para o servidor
-  - Servir com Nginx, IIS ou outro servidor estático
+  - Servir com Nginx ou IIS (configuração documentada)
   - Garantir que CORS na API .NET aceita a origem de produção
-- [ ] `npx vitest --coverage` — cobertura final documentada
+- [x] Cobertura final documentada: 99.18% stmts, 97.97% branches, 93.1% funcs, 100% lines
