@@ -4,7 +4,7 @@
 
 ## Estado Atual
 
-**Fase 6.3 concluída.** HistoricoPanelComponent, ErrorBannerComponent e NextRunChipComponent implementados e integrados no AppComponent. 36 testes Vitest passando. Build de desenvolvimento OK.
+**Fase 6.4 concluída.** Cobertura Vitest: 99.18% statements, 97.97% branches, 93.1% functions, 100% lines. 39 testes passando em 7 arquivos de spec. Build OK.
 
 ## Premissas Confirmadas
 
@@ -57,7 +57,7 @@
 | Setup Angular v21 + PollingService com signal | ✅ Fase 6.1 — 2026-05-03 |
 | DashboardTable + StatusBadge com signals/computed | ✅ Fase 6.2 — 2026-05-03 |
 | HistoricoPanel + ErrorBanner | ✅ Fase 6.3 — 2026-05-03 |
-| Cobertura Vitest ≥ 80% | ⬜ Fase 6.4 |
+| Cobertura Vitest ≥ 80% | ✅ Fase 6.4 — 2026-05-03 (99.18% stmts, 93.1% funcs, 100% lines) |
 | Build de produção + documentação de deploy | ⬜ Fase 6.5 |
 
 ## Fragmentos Críticos Implementados
